@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Founder Tax Model</title>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background: #008060;
+            font-family: 'Open Sans', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 48px auto;
+            padding: 0;
+        }
+        
+        h1 {
+            color: #fff;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 8px;
+        }
+        
+        .subtitle {
+            color: #fff;
+            text-align: center;
+            font-size: 16px;
+            opacity: 0.8;
+            margin-bottom: 32px;
+        }
+        
+        .form-container {
+            border-radius: 18px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.12);
+            padding: 32px;
+            background: #fff;
+            margin: 0 auto;
+            width: 600px;
+            min-width: 320px;
+        }
+        
+        .form {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            margin-bottom: 24px;
+            align-items: center;
+            width: 100%;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
+        
+        .form-group label {
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        
+        .input-wrapper {
+            display: flex;
+            align-items: center;
+            width: 100%;
+        }
+        
+        .form-input {
+            width: 100%;
+            font-size: 18px;
+            border-radius: 8px;
+            border: 1.5px solid #d1d5db;
+            padding: 10px 12px;
+            background: #f9f9f9;
+            margin-bottom: 0;
+        }
+        
+        .currency-label {
+            margin-left: 6px;
+            white-space: nowrap;
+            font-size: 15px;
+            color: #555;
+        }
+        
+        .spacer {
+            display: block;
+            height: 16px;
+        }
+        
+        .vesting-section {
+            margin: 12px 0;
+            width: 100%;
+        }
+        
+        .vesting-title {
+            text-align: left;
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+        
+        .vesting-table {
+            width: 100%;
+            border-radius: 8px;
+            border-collapse: collapse;
+            margin-bottom: 8px;
+        }
+        
+        .vesting-table th {
+            text-align: left;
+            padding: 8px 4px;
+        }
+        
+        .vesting-input {
+            width: 50px;
+            margin-right: 4px;
+            font-size: 16px;
+            border-radius: 6px;
+            border: 1.5px solid #d1d5db;
+            padding: 6px 8px;
+            background: #f9f9f9;
+        }
+        
+        .range-wrapper {
+            display: flex;
+            align-items: center;
+            width: 100%;
+        }
+        
+        .range-input {
+            width: 100%;
+        }
+        
+        .range-value {
+            margin-left: 8px;
+            min-width: 32px;
+        }
+        
+        .loading {
+            color: #fff;
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .error {
+            color: #ff5252;
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .summary-table {
+            border: 1px solid #ccc;
+            width: 100%;
+            margin-top: 24px;
+            border-collapse: collapse;
+        }
+        
+        .summary-table th,
+        .summary-table td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: left;
+        }
+        
+        .summary-table .highlight {
+            background: #e0e0e0;
+        }
+        
+        .summary-table td b {
+            font-weight: bold;
+        }
+        
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Founder Tax Model</h1>
+        <div class="subtitle">(Beta Version)</div>
+        
+        <div class="form-container">
+            <form class="form" id="taxModelForm">
+                <!-- Total Cash -->
+                <div class="form-group">
+                    <label>Total Cash:</label>
+                    <div class="input-wrapper">
+                        <input name="cash" type="text" class="form-input" placeholder="" required>
+                        <span class="currency-label">( $ USD )</span>
+                    </div>
+                    <div class="vesting-section">
+                        <div class="vesting-title">Vesting Schedule (by %)</div>
+                        <table class="vesting-table">
+                            <thead>
+                                <tr>
+                                    <th>Closing</th>
+                                    <th>Year 1</th>
+                                    <th>Year 2</th>
+                                    <th>Year 3</th>
+                                    <th>Year 4</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><input name="vestingCashClosing" type="number" min="0" max="100" step="0.1" class="vesting-input" value="0"></td>
+                                    <td><input name="vestingCashYear1" type="number" min="0" max="100" step="0.1" class="vesting-input" value="0"></td>
+                                    <td><input name="vestingCashYear2" type="number" min="0" max="100" step="0.1" class="vesting-input" value="0"></td>
+                                    <td><input name="vestingCashYear3" type="number" min="0" max="100" step="0.1" class="vesting-input" value="0"></td>
+                                    <td><input name="vestingCashYear4" type="number" min="0" max="100" step="0.1" class="vesting-input" value="0"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Restricted Stock -->
+                <div class="form-group">
+                    <span class="spacer"></span>
+                    <label>Restricted Stock:</label>
+                    <div class="input-wrapper">
+                        <input name="restrictedStock" type="text" class="form-input" placeholder="" required>
+                        <span class="currency-label">( $ USD )</span>
+                    </div>
+                    <div class="vesting-section">
+                        <div class="vesting-title">Vesting Schedule (by %)</div>
+                        <table class="vesting-table">
+                            <thead>
+                                <tr>
+                                    <th>Closing</th>
+                                    <th>Year 1</th>
+                                    <th>Year 2</th>
+                                    <th>Year 3</th>
+                                    <th>Year 4</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><input name="vestingRestrictedStockClosing" type="number" min="0" max="100" step="0.1" class="vesting-input" value="0"></td>
+                                    <td><input name="vestingRestrictedStockYear1" type="number" min="0" max="100" step="0.1" class="vesting-input" value="0"></td>
+                                    <td><input name="vestingRestrictedStockYear2" type="number" min="0" max="100" step="0.1" class="vesting-input" value="0"></td>
+                                    <td><input name="vestingRestrictedStockYear3" type="number" min="0" max="100" step="0.1" class="vesting-input" value="0"></td>
+                                    <td><input name="vestingRestrictedStockYear4" type="number" min="0" max="100" step="0.1" class="vesting-input" value="0"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- RSUs -->
+                <div class="form-group">
+                    <span class="spacer"></span>
+                    <label>RSUs:</label>
+                    <div class="input-wrapper">
+                        <input name="rsus" type="text" class="form-input" placeholder="" required>
+                        <span class="currency-label">( $ USD )</span>
+                    </div>
+                    <div class="vesting-section">
+                        <div class="vesting-title">Vesting Schedule (by %)</div>
+                        <table class="vesting-table">
+                            <thead>
+                                <tr>
+                                    <th>Year 1</th>
+                                    <th>Year 2</th>
+                                    <th>Year 3</th>
+                                    <th>Year 4</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><input name="vestingRSUsYear1" type="number" min="0" max="100" step="0.1" class="vesting-input" value="33.3"></td>
+                                    <td><input name="vestingRSUsYear2" type="number" min="0" max="100" step="0.1" class="vesting-input" value="33.3"></td>
+                                    <td><input name="vestingRSUsYear3" type="number" min="0" max="100" step="0.1" class="vesting-input" value="33.4"></td>
+                                    <td><input name="vestingRSUsYear4" type="number" min="0" max="100" step="0.1" class="vesting-input" value="0"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Growth Rates -->
+                <div class="form-group">
+                    <label>YoY Increase to Shopify Stock (Year 1):</label>
+                    <div class="range-wrapper">
+                        <input name="growthYear1" type="range" min="0" max="100" step="1" value="0" class="range-input">
+                        <span class="range-value" id="growthYear1Value">0%</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>YoY Increase to Shopify Stock (Year 2):</label>
+                    <div class="range-wrapper">
+                        <input name="growthYear2" type="range" min="0" max="100" step="1" value="0" class="range-input">
+                        <span class="range-value" id="growthYear2Value">0%</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>YoY Increase to Shopify Stock (Year 3):</label>
+                    <div class="range-wrapper">
+                        <input name="growthYear3" type="range" min="0" max="100" step="1" value="0" class="range-input">
+                        <span class="range-value" id="growthYear3Value">0%</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>YoY Increase to Shopify Stock (Year 4):</label>
+                    <div class="range-wrapper">
+                        <input name="growthYear4" type="range" min="0" max="100" step="1" value="0" class="range-input">
+                        <span class="range-value" id="growthYear4Value">0%</span>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div id="loading" class="loading hidden">Calculating...</div>
+        <div id="error" class="error hidden"></div>
+        
+        <div id="summaryContainer" class="hidden">
+            <table class="summary-table" id="summaryTable">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Closing</th>
+                        <th>Year 1</th>
+                        <th>Year 2</th>
+                        <th>Year 3</th>
+                        <th>Year 4</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody id="summaryTableBody">
+                    <!-- Summary rows will be populated by JavaScript -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        class TaxModelApp {
+            constructor() {
+                this.inputs = {
+                    cash: "",
+                    restrictedStock: "",
+                    rsus: "",
+                    growthYear1: "0",
+                    growthYear2: "0",
+                    growthYear3: "0",
+                    growthYear4: "0",
+                    vestingCashClosing: "0",
+                    vestingCashYear1: "0",
+                    vestingCashYear2: "0",
+                    vestingCashYear3: "0",
+                    vestingCashYear4: "0",
+                    vestingRestrictedStockClosing: "0",
+                    vestingRestrictedStockYear1: "0",
+                    vestingRestrictedStockYear2: "0",
+                    vestingRestrictedStockYear3: "0",
+                    vestingRestrictedStockYear4: "0",
+                    vestingRSUsYear1: "33.3",
+                    vestingRSUsYear2: "33.3",
+                    vestingRSUsYear3: "33.4",
+                    vestingRSUsYear4: "0"
+                };
+
+                this.summary = null;
+                this.loading = false;
+                this.error = null;
+                this.debounceTimer = null;
+
+                this.initializeEventListeners();
+                this.updateRangeValues();
+                this.fetchSummary();
+            }
+
+            initializeEventListeners() {
+                const form = document.getElementById('taxModelForm');
+                const inputs = form.querySelectorAll('input');
+
+                inputs.forEach(input => {
+                    input.addEventListener('input', (e) => {
+                        this.handleInputChange(e);
+                    });
+
+                    // Set initial values
+                    if (this.inputs.hasOwnProperty(input.name)) {
+                        input.value = this.inputs[input.name];
+                    }
+                });
+
+                // Special handling for range inputs to update display values
+                ['growthYear1', 'growthYear2', 'growthYear3', 'growthYear4'].forEach(name => {
+                    const input = document.querySelector(`input[name="${name}"]`);
+                    const valueDisplay = document.getElementById(`${name}Value`);
+                    
+                    input.addEventListener('input', () => {
+                        valueDisplay.textContent = `${input.value}%`;
+                    });
+                });
+
+                // Special handling for currency inputs to add comma formatting
+                ['cash', 'restrictedStock', 'rsus'].forEach(name => {
+                    const input = document.querySelector(`input[name="${name}"]`);
+                    
+                    // Store the raw value as a data attribute for easy access
+                    input.addEventListener('input', (e) => {
+                        const rawValue = e.target.value.replace(/[^\d.]/g, '');
+                        const parts = rawValue.split('.');
+                        const cleanValue = parts.length > 2 ? parts[0] + '.' + parts.slice(1).join('') : rawValue;
+                        
+                        // Store both in data attribute and in our inputs object
+                        e.target.setAttribute('data-raw-value', cleanValue);
+                        this.inputs[input.name] = cleanValue;
+                    });
+                    
+                    // Format only when user finishes (leaves the field)
+                    input.addEventListener('blur', (e) => {
+                        this.formatCurrencyOnBlur(e.target);
+                    });
+                    
+                    // Remove formatting when user starts typing (focuses on field)
+                    input.addEventListener('focus', (e) => {
+                        this.removeCurrencyFormatting(e.target);
+                    });
+                });
+            }
+
+            formatCurrencyOnBlur(input) {
+                // Get raw value from data attribute as backup
+                const rawValue = input.getAttribute('data-raw-value') || input.value.replace(/[^\d.]/g, '') || '';
+                
+                if (rawValue && rawValue !== '') {
+                    const formatted = this.addCommasToNumber(rawValue);
+                    input.value = formatted;
+                    // Update our inputs object with the clean value
+                    this.inputs[input.name] = rawValue;
+                }
+            }
+
+            removeCurrencyFormatting(input) {
+                // Get raw value from data attribute
+                const rawValue = input.getAttribute('data-raw-value') || '';
+                input.value = rawValue;
+            }
+
+            addCommasToNumber(numStr) {
+                if (!numStr || numStr === '') {
+                    return '';
+                }
+                
+                // Split into integer and decimal parts
+                const parts = numStr.toString().split('.');
+                const integerPart = parts[0];
+                const decimalPart = parts[1] ? '.' + parts[1] : '';
+                
+                // Add commas to integer part
+                const withCommas = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+                
+                return withCommas + decimalPart;
+            }
+
+            handleInputChange(e) {
+                const { name, value } = e.target;
+                this.inputs[name] = value;
+
+                // Debounce API calls
+                clearTimeout(this.debounceTimer);
+                this.debounceTimer = setTimeout(() => {
+                    this.fetchSummary();
+                }, 300);
+            }
+
+            updateRangeValues() {
+                ['growthYear1', 'growthYear2', 'growthYear3', 'growthYear4'].forEach(name => {
+                    const input = document.querySelector(`input[name="${name}"]`);
+                    const valueDisplay = document.getElementById(`${name}Value`);
+                    valueDisplay.textContent = `${input.value}%`;
+                });
+            }
+
+            async fetchSummary() {
+                this.setLoading(true);
+                this.setError(null);
+                this.setSummary(null);
+
+                try {
+                    // Use JSONP to bypass CORS completely
+                    const callbackName = 'taxModelCallback_' + Date.now();
+                    const scriptUrl = `https://script.google.com/macros/s/AKfycbwoKU-1bXf3ChhelgHh-rz4oymquCsWCCefhV1SnfoFphRyWNxUWRRxqBSAoyEXRfHZ/exec?callback=${callbackName}&data=${encodeURIComponent(JSON.stringify(this.inputs))}`;
+                    
+                    console.log('Making JSONP request to:', scriptUrl);
+                    console.log('Sending data:', this.inputs);
+                    
+                    const promise = new Promise((resolve, reject) => {
+                        // Set up the callback function
+                        window[callbackName] = (data) => {
+                            console.log('Received response:', data);
+                            delete window[callbackName];
+                            document.head.removeChild(script);
+                            resolve(data);
+                        };
+
+                        // Create and append script tag
+                        const script = document.createElement('script');
+                        script.src = scriptUrl;
+                        script.onerror = () => {
+                            delete window[callbackName];
+                            document.head.removeChild(script);
+                            reject(new Error('Failed to load script'));
+                        };
+                        
+                        // Set timeout
+                        setTimeout(() => {
+                            if (window[callbackName]) {
+                                delete window[callbackName];
+                                if (script.parentNode) {
+                                    document.head.removeChild(script);
+                                }
+                                reject(new Error('Request timeout'));
+                            }
+                        }, 15000); // 15 second timeout
+                        
+                        document.head.appendChild(script);
+                    });
+
+                    const data = await promise;
+                    this.setSummary(data);
+                } catch (err) {
+                    this.setError(err.message);
+                } finally {
+                    this.setLoading(false);
+                }
+            }
+
+            setLoading(loading) {
+                this.loading = loading;
+                const loadingEl = document.getElementById('loading');
+                const statusButton = window.statusButton;
+                
+                if (loading) {
+                    loadingEl.classList.remove('hidden');
+                    if (statusButton) {
+                        statusButton.textContent = 'Calculating...';
+                        statusButton.style.background = '#ff9500';
+                        statusButton.style.cursor = 'not-allowed';
+                        statusButton.disabled = true;
+                    }
+                } else {
+                    loadingEl.classList.add('hidden');
+                    if (statusButton) {
+                        statusButton.disabled = false;
+                        statusButton.style.cursor = 'pointer';
+                    }
+                }
+            }
+
+            setError(error) {
+                this.error = error;
+                const errorEl = document.getElementById('error');
+                const statusButton = window.statusButton;
+                
+                if (error) {
+                    errorEl.textContent = error;
+                    errorEl.classList.remove('hidden');
+                    if (statusButton) {
+                        statusButton.textContent = 'Calculation Failed - Try Again';
+                        statusButton.style.background = '#dc3545';
+                    }
+                } else {
+                    errorEl.classList.add('hidden');
+                }
+            }
+
+            setSummary(summary) {
+                this.summary = summary;
+                this.renderSummaryTable();
+                
+                // Update status button based on whether we have summary data
+                const statusButton = window.statusButton;
+                if (statusButton) {
+                    if (summary) {
+                        statusButton.textContent = 'Calculation Complete - Export to CSV';
+                        statusButton.style.background = '#28a745';
+                    } else {
+                        statusButton.textContent = 'Ready to Calculate';
+                        statusButton.style.background = '#008060';
+                    }
+                }
+            }
+
+            renderSummaryTable() {
+                const container = document.getElementById('summaryContainer');
+                const tbody = document.getElementById('summaryTableBody');
+
+                if (!this.summary) {
+                    container.classList.add('hidden');
+                    return;
+                }
+
+                container.classList.remove('hidden');
+
+                const rows = [
+                    {
+                        label: 'Total Economic Value Received',
+                        data: this.summary.totalEconomicValue,
+                        highlight: true
+                    },
+                    {
+                        label: 'Taxes Paid',
+                        data: this.summary.taxesPaid,
+                        highlight: false
+                    },
+                    {
+                        label: 'Total Net Benefit',
+                        data: this.summary.totalNetBenefit,
+                        highlight: true
+                    },
+                    {
+                        label: 'Effective Tax Rate',
+                        data: this.summary.effectiveTaxRate,
+                        highlight: false
+                    }
+                ];
+
+                tbody.innerHTML = rows.map(row => `
+                    <tr${row.highlight ? ' class="highlight"' : ''}>
+                        <td><b>${row.label}</b></td>
+                        <td>${row.data.closing}</td>
+                        <td>${row.data.year1}</td>
+                        <td>${row.data.year2}</td>
+                        <td>${row.data.year3}</td>
+                        <td>${row.data.year4}</td>
+                        <td>${row.data.total}</td>
+                    </tr>
+                `).join('');
+            }
+
+            // Method to export data to CSV
+            exportToCSV() {
+                if (!this.summary) {
+                    alert('No data to export. Please wait for calculations to complete.');
+                    return;
+                }
+
+                const csvData = [
+                    ['Category', 'Closing', 'Year 1', 'Year 2', 'Year 3', 'Year 4', 'Total'],
+                    ['Total Economic Value Received', 
+                     this.summary.totalEconomicValue.closing,
+                     this.summary.totalEconomicValue.year1,
+                     this.summary.totalEconomicValue.year2,
+                     this.summary.totalEconomicValue.year3,
+                     this.summary.totalEconomicValue.year4,
+                     this.summary.totalEconomicValue.total],
+                    ['Taxes Paid',
+                     this.summary.taxesPaid.closing,
+                     this.summary.taxesPaid.year1,
+                     this.summary.taxesPaid.year2,
+                     this.summary.taxesPaid.year3,
+                     this.summary.taxesPaid.year4,
+                     this.summary.taxesPaid.total],
+                    ['Total Net Benefit',
+                     this.summary.totalNetBenefit.closing,
+                     this.summary.totalNetBenefit.year1,
+                     this.summary.totalNetBenefit.year2,
+                     this.summary.totalNetBenefit.year3,
+                     this.summary.totalNetBenefit.year4,
+                     this.summary.totalNetBenefit.total],
+                    ['Effective Tax Rate',
+                     this.summary.effectiveTaxRate.closing,
+                     this.summary.effectiveTaxRate.year1,
+                     this.summary.effectiveTaxRate.year2,
+                     this.summary.effectiveTaxRate.year3,
+                     this.summary.effectiveTaxRate.year4,
+                     this.summary.effectiveTaxRate.total]
+                ];
+
+                const csvContent = csvData.map(row => row.join(',')).join('\n');
+                const blob = new Blob([csvContent], { type: 'text/csv' });
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.setAttribute('hidden', '');
+                a.setAttribute('href', url);
+                a.setAttribute('download', 'founder-tax-model-results.csv');
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                window.URL.revokeObjectURL(url);
+            }
+        }
+
+        // Initialize the app when the DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            window.taxModelApp = new TaxModelApp();
+            
+            // Add status/export button for CSV functionality
+            const formContainer = document.querySelector('.form-container');
+            const statusButton = document.createElement('button');
+            statusButton.id = 'statusButton';
+            statusButton.textContent = 'Ready to Calculate';
+            statusButton.type = 'button';
+            statusButton.style.cssText = `
+                background: #008060;
+                color: white;
+                border: none;
+                padding: 12px 24px;
+                border-radius: 8px;
+                font-size: 16px;
+                cursor: pointer;
+                margin-top: 20px;
+                width: 100%;
+                transition: all 0.3s ease;
+            `;
+            statusButton.addEventListener('click', () => {
+                if (!window.taxModelApp.loading && window.taxModelApp.summary) {
+                    window.taxModelApp.exportToCSV();
+                }
+            });
+            formContainer.appendChild(statusButton);
+            
+            // Store reference to the button for status updates
+            window.statusButton = statusButton;
+        });
+    </script>
+</body>
+</html> 
